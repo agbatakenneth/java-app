@@ -8,6 +8,6 @@ public class HomeController {
     
     @GetMapping("/")
     public String index() {
-        return "Welcome to Tech365 spring app";
+        return "Welcome to my Spring Containerization app";
     }
 }
