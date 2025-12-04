@@ -37,7 +37,7 @@ pipeline {
                 usernameVariable: 'DOCKER_LOGIN',
                 passwordVariable: 'PASSWORD'
                 )]) {
-                    ssh '''
+                    sh '''
                         echo $PASSWORD | docker login -u $DOCKER_LOGIN --password-stdin
                         docker push kubeagbaken/java-app:v1
                         docker logout
