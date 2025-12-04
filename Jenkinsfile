@@ -36,7 +36,7 @@ pipeline {
                 SNYK_TOKEN = credentials('SNYK_TOKEN')
             }
             steps {
-                dir('${WORKSPACE}') {
+                dir("${WORKSPACE}") {
                     sh '''
                         curl -Lo snyk https://static.snyk.io/cli/latest/snyk-linux
                         chmod +x snyk
