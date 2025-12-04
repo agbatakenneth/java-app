@@ -16,7 +16,7 @@ pipeline {
         stage ('RunSonarCloudAnalysis') {
             steps {
                 withCredentials([string(credentialsId: 'SONAR-TOKEN', variable: 'SONAR-TOKEN')]) {
-                    sh 'mvn clean verify sonar:sonar -Dsonar.login=$SONAR-TOKEN -Dsonar.organization=agbaken-projects -Dsonar.host.url=https://sonarcloud.io -Dsonar.projectKey=agbaken-projects_java-app'
+                    sh 'mvn clean verify sonar:sonar -Dsonar.login=$SONAR-TOKEN -Dsonar.organization=agbaken-projects -Dsonar.host.url=https://sonarcloud.io -Dsonar.projectKey=agbaken-projects/java-app'
                 }
             }
         }
@@ -27,9 +27,28 @@ pipeline {
             }
         }
 
+        stage('Snyk Scan') {
+            tools {
+                jdk 'jdk17'
+                maven 'maven3'
+            }
+            environment{
+                SNYK_TOKEN = credentials('SNYK_TOKEN')
+            }
+            steps {
+                dir("${WORKSPACE}") {
+                    sh """
+                        chmod +x mvnw
+                        ./mvnw dependency:tree -DoutputType=dot
+                        snyk test --all-projects --severity-threshold==medium
+                       """
+                } 
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t kubeagbaken/my-java-app:v1 .'
+                sh 'docker build -t kubeagbaken/java-app:v1 .'
             }
         }
 
@@ -42,7 +61,7 @@ pipeline {
                 )]) {
                     sh '''
                         echo $PASSWORD | docker login -u $USERNAME --password-stdin
-                        docker push kubeagbaken/my-java-app:v1
+                        docker push kubeagbaken/java-app:v1
                         docker logout
                     '''
                 }
