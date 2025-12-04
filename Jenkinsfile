@@ -64,7 +64,7 @@ pipeline {
                 )]) {
                     sh '''
                         echo $PASSWORD | docker login -u $USERNAME --password-stdin
-                        docker push kubeagbaken/java-app:v1
+                        docker push kubeagbaken/my-java-app:v1
                         docker logout
                     '''
                 }
