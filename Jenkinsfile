@@ -14,7 +14,11 @@ pipeline {
         }
         stage('RunSonnarCloudAnalysis') {
             steps {
+<<<<<<< HEAD:jenkinsfile
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR-TOKEN')]) {
+=======
+                withCresdentials([string(credentialsId: 'sonar-token', variable: 'SONAR-TOKEN')]) {
+>>>>>>> 6c57635b79c21dad9a77de247130c01037a39c86:Jenkinsfile
                     sh 'mvn clean verify sonar:sonar -Dsonar.login=$SONAR-TOKEN -Dsonar.organization=agbaken-projects -Dsonar.host.url=https://sonarcloud.io -Dsonar.projectKey=agbaken-projects_java-app'
                 }
             }
