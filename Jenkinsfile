@@ -51,7 +51,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t kubeagbaken/java-app:v1 .'
+                sh 'docker build -t kubeagbaken/my-java-app:v1 .'
             }
         }
 
