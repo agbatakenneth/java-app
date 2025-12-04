@@ -15,8 +15,8 @@ pipeline {
 
         stage ('RunSonarCloudAnalysis') {
             steps {
-                withCredentials([string(credentialsId: 'SONAR-TOKEN', variable: 'SONAR-TOKEN')]) {
-                    sh 'mvn clean verify sonar:sonar -Dsonar.login=$SONAR-TOKEN -Dsonar.organization=agbaken-projects -Dsonar.host.url=https://sonarcloud.io -Dsonar.projectKey=agbaken-projects/java-app'
+                withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                    sh 'mvn clean verify sonar:sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.organization=agbaken-projects -Dsonar.host.url=https://sonarcloud.io -Dsonar.projectKey=agbaken-projects/java-app'
                 }
             }
         }
@@ -38,6 +38,9 @@ pipeline {
             steps {
                 dir("${WORKSPACE}") {
                     sh """
+                        curl -Lo https://static.snyk.sny.io/cli/latest/snyk-linux
+                        chmod +x snyk
+                        ./snyk auth --auth-type=token $SNYK_TOKEN
                         chmod +x mvnw
                         ./mvnw dependency:tree -DoutputType=dot
                         snyk test --all-projects --severity-threshold==medium
