@@ -7,14 +7,14 @@ pipeline {
     }
 
     stages {
-        stage(''checkout code) {
+        stage('checkout code') {
             steps {
                 checkout scm
             }
         }
         stage('RunSonnarCloudAnalysis') {
             steps {
-                withCres\dentials([string(credentialsId: 'sonar-token', variable: 'SONAR-TOKEN')]) {
+                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR-TOKEN')]) {
                     sh 'mvn clean verify sonar:sonar -Dsonar.login=$SONAR-TOKEN -Dsonar.organization=agbaken-projects -Dsonar.host.url=https://sonarcloud.io -Dsonar.projectKey=agbaken-projects_java-app'
                 }
             }
@@ -37,9 +37,9 @@ pipeline {
                 usernameVariable: 'DOCKER_LOGIN',
                 passwordVariable: 'PASSWORD'
                 )]) {
-                    ssh '''
+                    sh '''
                         echo $PASSWORD | docker login -u $DOCKER_LOGIN --password-stdin
-                        docker push kubeagbaken/my-java-app:v1
+                        docker push kubeagbaken/java-app:v1
                         docker logout
                     '''
                 }
