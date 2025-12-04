@@ -56,8 +56,8 @@ pipeline {
         }
         failure {
             echo '❌ Build failed. Check the logs for details.'
-        }
-    }
+        }
+    }
 
 }
 
